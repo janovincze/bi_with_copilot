@@ -1,0 +1,110 @@
+# Copilot Analytics - Docker Compose
+#
+# Full Docker setup - NO Node.js/npx required!
+#
+# FIRST TIME SETUP (authenticate with GitHub):
+#   docker compose run --rm auth
+#   (Follow the URL in terminal to authenticate)
+#
+# USAGE (everything in Docker):
+#   docker compose up              # Starts copilot-api + streamlit
+#   Open: http://localhost:8501
+#
+# ALTERNATIVE SERVICES:
+#   docker compose --profile flask up         # Flask instead of Streamlit
+#   docker compose --profile dev up           # Dev mode with live reload
+
+services:
+  # Authentication helper - run this first time only
+  # Usage: docker compose run --rm auth
+  auth:
+    image: ghcr.io/ericc-ch/copilot-api:latest
+    volumes:
+      - copilot-credentials:/root/.local/share/copilot-api
+    command: ["auth"]
+    profiles:
+      - setup
+
+  # GitHub Copilot API proxy
+  copilot-api:
+    image: ghcr.io/ericc-ch/copilot-api:latest
+    ports:
+      - "4141:4141"
+    volumes:
+      - copilot-credentials:/root/.local/share/copilot-api
+    environment:
+      - RATE_LIMIT=10
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:4141/v1/models"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
+  # Streamlit Dashboard (default, recommended)
+  streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8501:8501"
+    environment:
+      - COPILOT_API_URL=http://copilot-api:4141/v1
+    depends_on:
+      copilot-api:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Flask Dashboard (alternative, simpler)
+  # Usage: docker compose --profile flask up
+  flask:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8084"
+    environment:
+      - COPILOT_API_URL=http://copilot-api:4141/v1
+    depends_on:
+      copilot-api:
+        condition: service_healthy
+    command: ["python", "ai_dashboard/app_flask.py"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8084/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - flask
+
+  # Development mode with live reload
+  # Usage: docker compose --profile dev up
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8501:8501"
+    environment:
+      - COPILOT_API_URL=http://copilot-api:4141/v1
+    depends_on:
+      copilot-api:
+        condition: service_healthy
+    volumes:
+      - ./ai_dashboard:/app/ai_dashboard:ro
+    command: ["streamlit", "run", "ai_dashboard/app_streamlit.py", "--server.address", "0.0.0.0", "--server.port", "8501", "--server.runOnSave", "true"]
+    profiles:
+      - dev
+
+# Named volumes for persistent data
+volumes:
+  copilot-credentials:
+    # Stores GitHub Copilot authentication tokens
+    # Created by: docker compose run --rm auth

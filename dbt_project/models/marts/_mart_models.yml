@@ -1,0 +1,155 @@
+version: 2
+
+models:
+  - name: orders
+    description: >
+      Order fact table with payment totals. Each row represents a single order
+      with its associated payment information and status flags. Use this table
+      for order-level analysis including revenue, order status, and payment counts.
+    columns:
+      - name: order_id
+        description: Unique identifier for each order
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: Foreign key to the customer who placed the order
+        tests:
+          - not_null
+      - name: order_date
+        description: Date when the order was placed (YYYY-MM-DD format)
+      - name: order_status
+        description: >
+          Current status of the order. Values: 'placed', 'shipped', 'completed',
+          'return_pending', 'returned'
+      - name: order_amount
+        description: Total amount of the order in dollars (sum of all payments)
+      - name: payment_count
+        description: Number of payment transactions for this order
+      - name: is_completed
+        description: Boolean flag indicating if the order status is 'completed'
+      - name: is_returned
+        description: Boolean flag indicating if the order is returned or pending return
+
+  - name: customers
+    description: >
+      Customer dimension table with calculated lifetime value, segmentation,
+      and order statistics. This is the primary table for customer analysis,
+      marketing segmentation, and customer value assessment.
+    columns:
+      - name: customer_id
+        description: Unique identifier for each customer
+        tests:
+          - unique
+          - not_null
+      - name: first_name
+        description: Customer's first name
+      - name: last_name
+        description: Customer's last name
+      - name: full_name
+        description: Customer's full name (first name + last name)
+      - name: first_order_date
+        description: Date of the customer's first order (null if no orders)
+      - name: most_recent_order_date
+        description: Date of the customer's most recent order (null if no orders)
+      - name: number_of_orders
+        description: Total count of orders placed by this customer
+      - name: lifetime_value
+        description: >
+          Total amount spent by customer across all orders in dollars.
+          Higher values indicate more valuable customers.
+      - name: completed_order_value
+        description: Total value of completed orders only (excludes pending/returned)
+      - name: return_count
+        description: Number of orders that were returned or are pending return
+      - name: customer_segment
+        description: >
+          Customer value tier based on lifetime value:
+          'High Value' (>$100), 'Medium Value' ($50-100), 'Low Value' ($0-50),
+          'No Orders' (no purchases yet). Use for targeted marketing analysis.
+      - name: customer_type
+        description: >
+          Customer engagement level: 'Frequent' (>3 orders), 'Repeat' (2-3 orders),
+          'New' (1 order), 'Prospect' (no orders). Use for retention analysis.
+
+  - name: revenue_by_month
+    description: >
+      Monthly revenue aggregation table for time-series analysis. Contains
+      revenue metrics, order counts, and customer counts by month. Use this
+      table for trend analysis, month-over-month comparisons, and forecasting.
+    columns:
+      - name: revenue_month
+        description: Month in YYYY-MM format (e.g., '2024-01')
+        tests:
+          - unique
+          - not_null
+      - name: revenue_year
+        description: Year extracted from order date (YYYY format)
+      - name: month_number
+        description: Month number (01-12) for seasonal analysis
+      - name: total_orders
+        description: Count of distinct orders placed in this month
+      - name: unique_customers
+        description: Count of distinct customers who ordered in this month
+      - name: total_revenue
+        description: Sum of all order amounts in this month (dollars)
+      - name: completed_revenue
+        description: Revenue from completed orders only
+      - name: returned_revenue
+        description: Revenue from returned/return-pending orders
+      - name: average_order_value
+        description: Average order amount for orders in this month
+      - name: revenue_per_customer
+        description: Total revenue divided by unique customers (average spend per customer)
+
+  - name: revenue_by_customer
+    description: >
+      Revenue breakdown by customer segment and type. Aggregated view for
+      analyzing revenue contribution by different customer groups. Use for
+      marketing ROI analysis and customer segment performance.
+    columns:
+      - name: customer_segment
+        description: Customer value tier (High Value, Medium Value, Low Value, No Orders)
+      - name: customer_type
+        description: Customer engagement level (Frequent, Repeat, New, Prospect)
+      - name: customer_count
+        description: Number of customers in this segment/type combination
+      - name: total_revenue
+        description: Total lifetime value from customers in this group
+      - name: average_lifetime_value
+        description: Average lifetime value per customer in this group
+      - name: total_orders
+        description: Total number of orders from customers in this group
+      - name: average_orders_per_customer
+        description: Average number of orders per customer in this group
+      - name: total_returns
+        description: Total number of returned orders in this group
+      - name: return_rate_pct
+        description: Percentage of orders that were returned (returns/orders * 100)
+
+  - name: payment_analysis
+    description: >
+      Payment method analysis table. Shows distribution of payments by method
+      with volume and value metrics. Use for payment optimization, fraud analysis,
+      and understanding customer payment preferences.
+    columns:
+      - name: payment_method
+        description: >
+          Payment method used. Values: 'credit_card', 'coupon', 'bank_transfer',
+          'gift_card'
+      - name: transaction_count
+        description: Number of payment transactions using this method
+      - name: order_count
+        description: Number of distinct orders using this payment method
+      - name: total_amount
+        description: Total dollars processed through this payment method
+      - name: average_amount
+        description: Average transaction amount for this payment method
+      - name: min_amount
+        description: Minimum transaction amount for this payment method
+      - name: max_amount
+        description: Maximum transaction amount for this payment method
+      - name: pct_of_transactions
+        description: Percentage of total transactions using this method
+      - name: pct_of_revenue
+        description: Percentage of total revenue from this payment method

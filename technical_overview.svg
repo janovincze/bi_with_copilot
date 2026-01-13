@@ -1,0 +1,120 @@
+<svg width="800" height="700" viewBox="0 0 800 700" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8fafc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e2e8f0;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Box gradients -->
+    <linearGradient id="questionGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2563eb;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="engineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="copilotGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4f46e5;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="duckdbGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d97706;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="vizGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Drop shadow -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="700" fill="url(#bgGradient)"/>
+
+  <!-- Title -->
+  <text x="400" y="45" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#1e293b" text-anchor="middle">
+    Technical Overview
+  </text>
+
+  <!-- Box 1: Your Question -->
+  <g filter="url(#shadow)">
+    <rect x="150" y="70" width="500" height="70" rx="12" fill="url(#questionGradient)"/>
+    <text x="400" y="100" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      Your Question (Natural Language)
+    </text>
+    <text x="400" y="125" font-family="Arial, sans-serif" font-size="14" fill="#bfdbfe" text-anchor="middle" font-style="italic">
+      "Who are our high-value customers?"
+    </text>
+  </g>
+
+  <!-- Arrow 1 -->
+  <line x1="400" y1="145" x2="400" y2="175" stroke="#64748b" stroke-width="3"/>
+  <polygon points="400,185 392,170 408,170" fill="#64748b"/>
+
+  <!-- Box 2: Text-to-SQL Engine -->
+  <g filter="url(#shadow)">
+    <rect x="150" y="190" width="500" height="70" rx="12" fill="url(#engineGradient)"/>
+    <text x="400" y="220" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      Text-to-SQL Engine
+    </text>
+    <text x="400" y="245" font-family="Arial, sans-serif" font-size="13" fill="#a7f3d0" text-anchor="middle">
+      Schema + Example Queries + Your Question → Prompt
+    </text>
+  </g>
+
+  <!-- Arrow 2 -->
+  <line x1="400" y1="265" x2="400" y2="295" stroke="#64748b" stroke-width="3"/>
+  <polygon points="400,305 392,290 408,290" fill="#64748b"/>
+
+  <!-- Box 3: GitHub Copilot -->
+  <g filter="url(#shadow)">
+    <rect x="150" y="310" width="500" height="70" rx="12" fill="url(#copilotGradient)"/>
+    <text x="400" y="340" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      GitHub Copilot
+    </text>
+    <text x="400" y="365" font-family="Arial, sans-serif" font-size="13" fill="#c7d2fe" text-anchor="middle">
+      Generates SQL based on context and question
+    </text>
+  </g>
+
+  <!-- Arrow 3 -->
+  <line x1="400" y1="385" x2="400" y2="415" stroke="#64748b" stroke-width="3"/>
+  <polygon points="400,425 392,410 408,410" fill="#64748b"/>
+
+  <!-- Box 4: DuckDB -->
+  <g filter="url(#shadow)">
+    <rect x="150" y="430" width="500" height="70" rx="12" fill="url(#duckdbGradient)"/>
+    <text x="400" y="460" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1f2937" text-anchor="middle">
+      DuckDB
+    </text>
+    <text x="400" y="485" font-family="Arial, sans-serif" font-size="13" fill="#451a03" text-anchor="middle">
+      Executes query locally and returns results
+    </text>
+  </g>
+
+  <!-- Arrow 4 -->
+  <line x1="400" y1="505" x2="400" y2="535" stroke="#64748b" stroke-width="3"/>
+  <polygon points="400,545 392,530 408,530" fill="#64748b"/>
+
+  <!-- Box 5: Visualization -->
+  <g filter="url(#shadow)">
+    <rect x="150" y="550" width="500" height="70" rx="12" fill="url(#vizGradient)"/>
+    <text x="400" y="580" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      Visualization
+    </text>
+    <text x="400" y="605" font-family="Arial, sans-serif" font-size="13" fill="#ddd6fe" text-anchor="middle">
+      Automatically generates appropriate charts
+    </text>
+  </g>
+
+</svg>

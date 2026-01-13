@@ -1,0 +1,61 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: >
+      Staging table for customer data. Contains basic customer information
+      cleaned and standardized from the raw customers source.
+    columns:
+      - name: customer_id
+        description: Unique identifier for each customer
+        tests:
+          - unique
+          - not_null
+      - name: first_name
+        description: Customer's first name
+      - name: last_name
+        description: Customer's last name
+      - name: full_name
+        description: Customer's full name (first name + last name combined)
+
+  - name: stg_orders
+    description: >
+      Staging table for order data. Contains order information with
+      standardized column names and cleaned status values.
+    columns:
+      - name: order_id
+        description: Unique identifier for each order
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: Foreign key to the customer who placed the order
+        tests:
+          - not_null
+      - name: order_date
+        description: Date when the order was placed (YYYY-MM-DD format)
+      - name: order_status
+        description: >
+          Current status of the order. Possible values: 'placed', 'shipped',
+          'completed', 'return_pending', 'returned'
+
+  - name: stg_payments
+    description: >
+      Staging table for payment data. Contains payment transactions with
+      amounts converted from cents to dollars.
+    columns:
+      - name: payment_id
+        description: Unique identifier for each payment transaction
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: Foreign key to the order this payment is for
+        tests:
+          - not_null
+      - name: payment_method
+        description: >
+          Method used for payment. Possible values: 'credit_card', 'coupon',
+          'bank_transfer', 'gift_card'
+      - name: amount
+        description: Payment amount in dollars (converted from cents in source)
