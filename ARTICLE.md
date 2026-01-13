@@ -1,6 +1,6 @@
-# Turn GitHub Copilot into Your Personal Analytics AI: A Guide for Business Analysts
+# Turn GitHub Copilot into Your Personal Analytics AI: An Intro for Business Analysts
 
-*What if the GitHub Copilot subscription your company already pays for could create dashboards from plain English?*
+*What if the GitHub Copilot subscription your company already pays for could create dashboards from plain English? This article includes a complete working application you can try in 5 minutes.*
 
 ---
 
